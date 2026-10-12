@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentra AI - Cloud-Native Spanish Tutor Agent</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#090514',
+                        cardBg: '#130c25',
+                        brandPurple: '#7c3aed',
+                        brandIndigo: '#4f46e5',
+                        brandViolet: '#8b5cf6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #090514;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glow-effect {
+            box-shadow: 0 0 50px -10px rgba(124, 58, 237, 0.4);
+        }
+        .glow-border {
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 15%, rgba(124, 58, 237, 0.3) 0%, rgba(9, 5, 20, 0) 70%);
+        }
+        .glass-panel {
+            background: rgba(19, 12, 37, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating-node {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090514;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d1b4e;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between hero-gradient relative">
+
+    <header class="w-full border-b border-white/10 glass-panel sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brandPurple to-brandIndigo flex items-center justify-center glow-border shadow-lg">
+                    <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+                </div>
+                <span class="text-xl font-bold tracking-wider bg-gradient-to-r from-white via-purple-200 to-indigo-300 bg-clip-text text-transparent">SENTRA AI</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-purple-200/80">
+                <a href="#hero" class="hover:text-white transition">Overview</a>
+                <a href="#architecture" class="hover:text-white transition">Cloud Architecture</a>
+                <a href="#chat-section" class="hover:text-white transition">Live Agent</a>
+                <a href="#diagnostics" class="hover:text-white transition">Diagnostics</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
+                    Cluster Active
+                </span>
+                <a href="#chat-section" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-brandPurple to-brandIndigo text-white hover:opacity-90 transition shadow-lg shadow-purple-900/40">
+                    Launch Tutor <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section id="hero" class="relative pt-20 pb-16 px-6 text-center max-w-5xl mx-auto">
+            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-purple-950/60 border border-purple-500/30 text-purple-300 text-xs font-semibold mb-8 uppercase tracking-widest">
+                <i class="fa-solid fa-cloud text-brandViolet"></i> Cloud-Native Microservice Architecture
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-6">
+                Connect your AI agents to <br>
+                <span class="bg-gradient-to-r from-purple-400 via-indigo-300 to-white bg-clip-text text-transparent">distributed cloud infrastructure</span>
+            </h1>
+            
+            <p class="text-base sm:text-lg text-purple-200/70 max-w-2xl mx-auto mb-10">
+                Experience an ultra-fast A1 Spanish Tutor backed by Redis in-memory caching, Nginx load balancing, FastAPI compute replicas, and automated CI/CD pipelines.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+                <a href="#chat-section" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-brandPurple to-brandIndigo text-white hover:opacity-95 transition glow-effect flex items-center justify-center">
+                    <i class="fa-solid fa-comments mr-3"></i> Test Spanish Tutor
+                </a>
+                <a href="#architecture" class="w-full sm:w-auto px-8 py-4 rounded-xl font-semibold glass-panel text-purple-200 hover:text-white hover:border-purple-500/50 transition flex items-center justify-center">
+                    <i class="fa-solid fa-network-wired mr-3 text-brandViolet"></i> View Architecture Map
+                </a>
+            </div>
+
+            <!-- Floating Integration Node Hub Visual -->
+            <div id="architecture" class="relative w-full max-w-4xl mx-auto h-80 sm:h-96 glass-panel rounded-3xl p-8 overflow-hidden flex items-center justify-center glow-border">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#8b5cf6_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                
+                <div class="relative z-20 w-24 h-24 rounded-2xl bg-gradient-to-tr from-brandPurple to-brandIndigo flex flex-col items-center justify-center glow-effect shadow-2xl floating-node">
+                    <i class="fa-solid fa-brain text-white text-3xl mb-1"></i>
+                    <span class="text-[10px] font-bold tracking-wider text-purple-200">AI AGENT</span>
+                </div>
+
+                <div class="absolute top-8 left-8 sm:left-16 glass-panel px-4 py-3 rounded-xl flex items-center space-x-3 floating-node" style="animation-delay: 0.5s;">
+                    <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center text-red-400">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-xs font-bold text-white">Redis Cache</p>
+                        <p class="text-[10px] text-emerald-400">TTL: 3600s (Active)</p>
+                    </div>
+                </div>
+
+                <div class="absolute top-8 right-8 sm:right-16 glass-panel px-4 py-3 rounded-xl flex items-center space-x-3 floating-node" style="animation-delay: 1s;">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-xs font-bold text-white">FastAPI Replica</p>
+                        <p class="text-[10px] text-purple-300">Port 8000 (Load Balanced)</p>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-8 left-8 sm:left-16 glass-panel px-4 py-3 rounded-xl flex items-center space-x-3 floating-node" style="animation-delay: 1.5s;">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-xs font-bold text-white">Nginx L7 Proxy</p>
+                        <p class="text-[10px] text-blue-300">Round-Robin Routing</p>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-8 right-8 sm:right-16 glass-panel px-4 py-3 rounded-xl flex items-center space-x-3 floating-node" style="animation-delay: 2s;">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-xs font-bold text-white">CI/CD Pipeline</p>
+                        <p class="text-[10px] text-emerald-400">GitHub Actions (Passing)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="chat-section" class="max-w-7xl mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <!-- Diagnostics Sidebar -->
+                <div id="diagnostics" class="lg:col-span-1 glass-panel rounded-3xl p-6 flex flex-col justify-between border border-white/10">
+                    <div>
+                        <div class="flex items-center space-x-2 text-purple-300 font-semibold mb-6">
+                            <i class="fa-solid fa-gauge-high text-brandViolet"></i>
+                            <span>Cloud Diagnostics</span>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-2xl bg-black/40 border border-white/5">
+                                <p class="text-xs text-purple-300/70 mb-1">Cluster Health</p>
+                                <div class="flex items-center justify-between">
+                                    <span id="cluster-status" class="text-lg font-bold text-emerald-400">Healthy</span>
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-black/40 border border-white/5">
+                                <p class="text-xs text-purple-300/70 mb-1">Active Compute Node</p>
+                                <span id="node-id" class="text-xs font-mono font-bold text-purple-200 bg-purple-950/80 px-2 py-1 rounded border border-purple-500/30 block truncate">backend-replica-1</span>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-black/40 border border-white/5">
+                                <p class="text-xs text-purple-300/70 mb-1">Last Request Latency</p>
+                                <span id="metric-latency" class="text-lg font-bold text-white">—</span>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-black/40 border border-white/5">
+                                <p class="text-xs text-purple-300/70 mb-1">Cache Status</p>
+                                <span id="metric-cache" class="text-sm font-semibold text-purple-300">Idle</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-white/10 text-center">
+                        <span class="text-[11px] text-purple-300/50">Nginx ➔ FastAPI ➔ Redis ➔ Gemini 3.8</span>
+                    </div>
+                </div>
+
+                <!-- Chat Box Interface -->
+                <div class="lg:col-span-3 glass-panel rounded-3xl p-6 sm:p-8 flex flex-col h-[600px] border border-white/10 relative">
+                    <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white">Spanish AI Tutor</h3>
+                                <p class="text-xs text-purple-300/70">A1-Level Conversational & Grammar Assistant (Gemini 3.8 Flash)</p>
+                            </div>
+                        </div>
+                        <button onclick="clearChat()" class="text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-purple-200 transition border border-white/10">
+                            <i class="fa-solid fa-rotate-right mr-1"></i> Reset Chat
+                        </button>
+                    </div>
+
+                    <!-- Chat Messages Container -->
+                    <div id="chat-messages" class="flex-grow overflow-y-auto pr-2 space-y-4 mb-6">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-brandPurple flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">AI</div>
+                            <div class="glass-panel p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-purple-100">
+                                ¡Hola! 👋 Welcome! I am your A1-level Spanish language tutor powered by distributed cloud microservices and Gemini 3.8 Flash. Ask me any question about Spanish grammar, verbs, or daily vocabulary!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Box -->
+                    <div class="relative mt-auto">
+                        <form id="chat-form" onsubmit="sendMessage(event)" class="flex items-center">
+                            <input 
+                                type="text" 
+                                id="user-input" 
+                                placeholder="Ask your Spanish tutor a question..." 
+                                class="w-full bg-black/50 border border-purple-500/30 rounded-2xl py-4 pl-5 pr-14 text-sm text-white placeholder-purple-300/40 focus:outline-none focus:border-brandViolet focus:ring-1 focus:ring-brandViolet transition shadow-inner"
+                                autocomplete="off"
+                                required
+                            >
+                            <button 
+                                type="submit" 
+                                id="send-btn"
+                                class="absolute right-2.5 w-10 h-10 rounded-xl bg-gradient-to-r from-brandPurple to-brandIndigo text-white flex items-center justify-center hover:opacity-90 transition shadow-md"
+                            >
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="w-full border-t border-white/10 py-8 px-6 glass-panel text-center text-xs text-purple-300/60">
+        <p>&copy; 2026 Sentra AI Cloud-Native Tutor Agent. All rights reserved. Powered by Docker, FastAPI, Redis & Gemini 3.8.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchHealth();
+        });
+
+        async function fetchHealth() {
+            try {
+                const response = await fetch('http://localhost/health');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('cluster-status').innerText = data.status;
+                    document.getElementById('node-id').innerText = data.compute_node_id;
+                }
+            } catch (e) {
+                try {
+                    const fallback = await fetch('http://localhost:8000/health');
+                    if (fallback.ok) {
+                        const data = await fallback.json();
+                        document.getElementById('cluster-status').innerText = data.status;
+                        document.getElementById('node-id').innerText = data.compute_node_id;
+                    }
+                } catch (err) {
+                    document.getElementById('cluster-status').innerText = 'Connected (Mock)';
+                }
+            }
+        }
+
+        async function sendMessage(event) {
+            event.preventDefault();
+            const inputField = document.getElementById('user-input');
+            const prompt = inputField.value.trim();
+            if (!prompt) return;
+
+            const chatContainer = document.getElementById('chat-messages');
+
+            // Append User Message
+            chatContainer.innerHTML += `
+                <div class="flex items-start space-x-3 justify-end">
+                    <div class="bg-brandPurple/30 border border-purple-500/40 p-4 rounded-2xl rounded-tr-none max-w-[85%] text-sm leading-relaxed text-white">
+                        ${escapeHTML(prompt)}
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">You</div>
+                </div>
+            `;
+            inputField.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Append Loading Indicator
+            const loadingId = 'loading-' + Date.now();
+            chatContainer.innerHTML += `
+                <div id="${loadingId}" class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-brandPurple flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">AI</div>
+                    <div class="glass-panel p-4 rounded-2xl rounded-tl-none text-sm text-purple-300 flex items-center space-x-2">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <span>Thinking via cluster replicas, redis cache & gemini 3.8...</span>
+                    </div>
+                </div>
+            `;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                const systemPrompt = "You are a helpful A1-level Spanish language tutor. Always incorporate Spanish phrases, grammar tips, or cultural context into your responses while explaining clearly.";
+                const fullPrompt = `${systemPrompt}\n\nStudent: ${prompt}`;
+
+                let response;
+                try {
+                    response = await fetch('http://localhost/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: fullPrompt, model: 'gemini-3.8-flash' })
+                    });
+                } catch (err) {
+                    response = await fetch('http://localhost:8000/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: fullPrompt, model: 'gemini-3.8-flash' })
+                    });
+                }
+
+                document.getElementById(loadingId).remove();
+
+                if (response && response.ok) {
+                    const resData = await response.json();
+                    
+                    document.getElementById('metric-latency').innerText = resData.latency.toFixed(4) + 's';
+                    const cacheEl = document.getElementById('metric-cache');
+                    if (resData.cache_status === 'hit') {
+                        cacheEl.innerHTML = `<span class="text-emerald-400 font-bold">⚡ Cache Hit</span>`;
+                    } else {
+                        cacheEl.innerHTML = `<span class="text-blue-400 font-bold">🔄 Cache Miss</span>`;
+                    }
+
+                    chatContainer.innerHTML += `
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-brandPurple flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">AI</div>
+                            <div class="glass-panel p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-purple-100">
+                                ${escapeHTML(resData.response)}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Backend response failed');
+                }
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatContainer.innerHTML += `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-brandPurple flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">AI</div>
+                        <div class="glass-panel p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-red-300 border border-red-500/30">
+                            ¡Hola! (Demo Mode Fallback): To master Spanish verbs today, let's look at regular -ar verbs like <em>hablar</em> (to speak): hablo, hablas, habla... How can I help you practice?
+                        </div>
+                    </div>
+                `;
+            }
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            fetchHealth();
+        }
+
+        function clearChat() {
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-brandPurple flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">AI</div>
+                    <div class="glass-panel p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-purple-100">
+                        Chat reset! Ask me another question about Spanish vocabulary or grammar.
+                    </div>
+                </div>
+            `;
+            document.getElementById('metric-latency').innerText = '—';
+            document.getElementById('metric-cache').innerText = 'Idle';
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>
