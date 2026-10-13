@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import os
 
-BACKEND_API_URL = "https://tutor-backend-yray.onrender.com/"
+BACKEND_URL = "https://tutor-backend-yray.onrender.com/"
 
 st.set_page_config(page_title="Cloud-Native Spanish AI Tutor", layout="wide")
 
@@ -64,7 +64,7 @@ with st.sidebar:
     st.markdown("#### ⚖️ Load Balancer & Replicas")
     try:
     # Strip trailing slashes to prevent //health 404 errors
-        clean_url = BACKEND_API_URL.rstrip('/')
+        clean_url = BACKEND_URL.rstrip('/')
         response = requests.get(f"{clean_url}/health", timeout=15)
     
         if response.status_code == 200:
@@ -75,7 +75,7 @@ with st.sidebar:
             st.error(f"Backend Error {response.status_code}: {response.text}")
     except Exception as e:
         st.error(f"Connection Failed: {str(e)}")
-        
+
     st.divider()
     st.markdown("#### ⚡ In-Memory Cache")
     st.caption("**Technology:** Redis Container (Active)")
