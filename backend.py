@@ -68,4 +68,4 @@ def process_chat(request: ChatRequest):
         pass
     
     latency = time.time() - start_time
-    return {"response": ai_response, "cache_status": "miss", "latency": latency}3
+    return {"response": ai_response, "cache_status": "miss", "latency": latency}
