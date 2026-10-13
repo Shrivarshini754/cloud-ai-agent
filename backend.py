@@ -39,6 +39,8 @@ llm = ChatGoogleGenerativeAI(
     model="gemini-3.8-flash",
     google_api_key=os.getenv("GOOGLE_API_KEY"),
     temperature=0.7
+    max_tries=3
+    request_timeout=30
 )
 
 # Define the template
