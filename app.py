@@ -112,7 +112,7 @@ if prompt:
                 response = requests.post(
                     f"{clean_url}/chat", 
                     json={"prompt": full_prompt, "model": "gemini-3.8-flash"},
-                    timeout=60
+                    timeout=120
                 )
                 
                 if response.status_code == 200:
