@@ -22,6 +22,10 @@ class ChatRequest(BaseModel):
     prompt: str
     model: str = "gemini-3.8-flash"
 
+@app.get("/")
+def root():
+    return {"status": "Online", "service": "Spanish AI Tutor Backend"}
+
 @app.get("/health")
 def health_check():
     return {
@@ -64,4 +68,4 @@ def process_chat(request: ChatRequest):
         pass
     
     latency = time.time() - start_time
-    return {"response": ai_response, "cache_status": "miss", "latency": latency}
+    return {"response": ai_response, "cache_status": "miss", "latency": latency}3
