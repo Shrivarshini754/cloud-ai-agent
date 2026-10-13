@@ -110,7 +110,7 @@ if prompt:
                 full_prompt = f"{system_prompt}\n\nStudent: {prompt}"
 
                 response = requests.post(
-                    f"{BACKEND_URL}/chat", 
+                    f"{clean_url}/chat", 
                     json={"prompt": full_prompt, "model": "gemini-3.8-flash"},
                     timeout=60
                 )
