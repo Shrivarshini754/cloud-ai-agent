@@ -10,11 +10,16 @@ from langchain_core.prompts import PromptTemplate
 app = FastAPI()
 
 # Initialize Redis connection from environment variable
-redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379"))
-
+try:
+    redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379"))
+    redis_client.ping()
+    REDIS_AVAILABLE = True
+except Exception:
+    redis_client = None
+    REDIS_AVAILABLE = False
 # Initialize Groq LLM orchestrator
 llm = ChatGroq(
-    model="llama-3.1-8b-instant",
+    model="llama-3.3-70b-versatile",
     groq_api_key=os.getenv("GROQ_API_KEY"),
     temperature=0.7
 )
@@ -37,7 +42,7 @@ chain = prompt_template | llm
 
 class ChatRequest(BaseModel):
     prompt: str
-    model: str = "llama-3.1-8b-instant"
+    model: str = "llama-3.3-70b-versatile"
 
 @app.get("/health")
 def health_check():
