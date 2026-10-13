@@ -46,6 +46,13 @@ chain = prompt_template | llm
 
 class ChatRequest(BaseModel):
     prompt: str
+@app.get("/")
+def read_root():
+    return {
+        "service": "A1 Spanish Tutor API",
+        "status": "Online",
+        "endpoints": ["/health", "/chat"]
+    }
 
 @app.get("/health")
 def health_check():
