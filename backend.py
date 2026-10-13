@@ -21,7 +21,7 @@ except Exception as e:
 
 class ChatRequest(BaseModel):
     prompt: str
-    model: str = "gemini-3.8-flash"
+    model: str = "llama-3.1-8b-instant"
 
 @app.get("/")
 def root():
@@ -36,7 +36,7 @@ def health_check():
     }
 # Initialize the LangChain orchestrator
 llm = ChatGoogleGenerativeAI(
-    model="gemini-3.8-flash",
+    model="llama-3.1-8b-instant",
     google_api_key=os.getenv("GOOGLE_API_KEY"),
     temperature=0.7,
     max_tries=3,

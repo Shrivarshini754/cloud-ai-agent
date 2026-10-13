@@ -111,7 +111,7 @@ if prompt:
 
                 response = requests.post(
                     f"{clean_url}/chat", 
-                    json={"prompt": full_prompt, "model": "gemini-3.8-flash"},
+                    json={"prompt": full_prompt, "model": "llama-3.1-8b-instant"},
                     timeout=120
                 )
                 
