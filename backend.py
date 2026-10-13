@@ -4,50 +4,26 @@ import socket
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import redis
-from google import genai
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
+
 app = FastAPI()
 
-try:
-    redis_client = redis.Redis(
-        host=os.getenv("REDIS_HOST", "redis_cache"),
-        port=int(os.getenv("REDIS_PORT", 6379)),
-        decode_responses=True
-    )
-    genai_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
-except Exception as e:
-    print(f"Startup Connection Error: {e}")
+# Initialize Redis connection from environment variable
+redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379"))
 
-class ChatRequest(BaseModel):
-    prompt: str
-    model: str = "llama-3.1-8b-instant"
-
-@app.get("/")
-def root():
-    return {"status": "Online", "service": "Spanish AI Tutor Backend"}
-
-@app.get("/health")
-def health_check():
-    return {
-        "status": "Healthy",
-        "compute_node_id": socket.gethostname(),
-        "timestamp": time.time()
-    }
-# Initialize the LangChain orchestrator
-llm = ChatGoogleGenerativeAI(
+# Initialize Groq LLM orchestrator
+llm = ChatGroq(
     model="llama-3.1-8b-instant",
-    google_api_key=os.getenv("GOOGLE_API_KEY"),
-    temperature=0.7,
-    max_tries=3,
-    request_timeout=30
+    groq_api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.7
 )
 
-# Define the template
+# Define the Prompt Template for the A1 Spanish Tutor
 template = """
 You are an expert A1-level Spanish tutor. 
 Help the student learn Spanish by providing clear, encouraging, and accurate answers.
-
+    
 Student: {student_input}
 Tutor:
 """
@@ -56,42 +32,51 @@ prompt_template = PromptTemplate(
     template=template
 )
 
-# Link them together into a chain
+# Create the LangChain chain
 chain = prompt_template | llm
+
+class ChatRequest(BaseModel):
+    prompt: str
+    model: str = "llama-3.1-8b-instant"
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "Healthy",
+        "compute_node_id": socket.gethostname()
+    }
 
 @app.post("/chat")
 def process_chat(request: ChatRequest):
     start_time = time.time()
+    cache_key = request.prompt.strip().lower()
     
-    # 1. Check Redis Cache
     try:
-        cached_response = redis_client.get(request.prompt)
+        # 1. Check Redis Cache
+        cached_response = redis_client.get(cache_key)
         if cached_response:
-            latency = time.time() - start_time
-            return {"response": cached_response, "cache_status": "hit", "latency": latency}
-    except Exception:
-        pass 
-    
-    # 2. Generate Content (Fail-Fast, No Retries)
-    try:
-        response = genai_client.models.generate_content(
-            model=request.model,
-            contents=request.prompt,
-        )
+            latency = round(time.time() - start_time, 4)
+            return {
+                "response": cached_response.decode("utf-8"),
+                "cache_status": "Hit",
+                "latency": latency,
+                "compute_node_id": socket.gethostname()
+            }
+        
+        # 2. Invoke Groq Orchestrator
         ai_response = chain.invoke({"student_input": request.prompt})
         final_text = ai_response.content
+        
+        # 3. Save to Redis Cache (expires in 1 hour)
+        redis_client.setex(cache_key, 3600, final_text)
+        
+        latency = round(time.time() - start_time, 4)
+        return {
+            "response": final_text,
+            "cache_status": "Miss",
+            "latency": latency,
+            "compute_node_id": socket.gethostname()
+        }
+        
     except Exception as e:
-        error_str = str(e)
-        if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
-            ai_response = "⚠️ (Demo Mode Notice: API quota limit reached. Mock fallback active: ¡Hola! Vamos a aprender mucho español hoy.)"
-        else:
-            raise HTTPException(status_code=500, detail=f"Gemini Connection Error: {error_str}")
-    
-    # 3. Store in Cache
-    try:
-        redis_client.set(request.prompt, final_text, ex=3600)
-    except Exception:
-        pass
-    
-    latency = time.time() - start_time
-    return {"response": final_text, "cache_status": "miss", "latency": latency}
+        raise HTTPException(status_code=500, detail=str(e))

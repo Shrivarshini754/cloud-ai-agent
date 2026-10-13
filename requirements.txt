@@ -8,4 +8,4 @@ tenacity
 redis
 langchain
 langchain-core
-langchain-google-groq
+langchain-groq
