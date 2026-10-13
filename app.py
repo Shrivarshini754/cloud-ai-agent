@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import os
 
-BACKEND_URL = os.getenv("BACKEND_API_URL", "http://load_balancer:80")
+BACKEND_API_URL = os.getenv("BACKEND_API_URL", "http://load_balancer:80")
 
 st.set_page_config(page_title="Cloud-Native Spanish AI Tutor", layout="wide")
 
