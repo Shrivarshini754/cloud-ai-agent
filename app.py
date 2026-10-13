@@ -2,24 +2,8 @@ import streamlit as st
 import requests
 import os
 
-BACKEND_URL = "https://tutor-backend-yray.onrender.com/"
-
-# Initialize a request counter in Streamlit's session memory
-if "request_count" not in st.session_state:
-    st.session_state.request_count = 0
-
-# Define both of your Render backend URLs
-BACKEND_URL_1 = "https://tutor-backend-original.onrender.com/chat"
-BACKEND_URL_2 = "https://tutor-backend-node2.onrender.com/chat"
-
-# Round-Robin Load Balancer: Alternate URLs based on odd/even request count
-if st.session_state.request_count % 2 == 0:
-    active_url = BACKEND_URL_1
-else:
-    active_url = BACKEND_URL_2
-
-# Increment the counter for the next message
-st.session_state.request_count += 1
+# Define your primary single Render backend URL
+BACKEND_URL = "https://tutor-backend-yray.onrender.com"
 
 st.set_page_config(page_title="Cloud-Native Spanish AI Tutor", layout="wide")
 
@@ -80,7 +64,7 @@ with st.sidebar:
     st.divider()
     st.markdown("#### ⚖️ Load Balancer & Replicas")
     try:
-    # Strip trailing slashes to prevent //health 404 errors
+        # Strip trailing slashes to prevent //health 404 errors
         clean_url = BACKEND_URL.rstrip('/')
         response = requests.get(f"{clean_url}/health", timeout=15)
     
@@ -125,8 +109,10 @@ if prompt:
             try:
                 system_prompt = "You are a helpful A1-level Spanish language tutor. Always incorporate Spanish phrases, grammar tips, or cultural context into your responses while explaining clearly."
                 full_prompt = f"{system_prompt}\n\nStudent: {prompt}"
+                
+                clean_url = BACKEND_URL.rstrip('/')
                 response = requests.post(
-                    f"{active_url}/chat", 
+                    f"{clean_url}/chat", 
                     json={"prompt": full_prompt, "model": "openai/gpt-oss-20b"},
                     timeout=120
                 )
