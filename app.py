@@ -63,13 +63,19 @@ with st.sidebar:
     st.divider()
     st.markdown("#### ⚖️ Load Balancer & Replicas")
     try:
-    # Increased timeout to 15 seconds to allow Render to connect
-        health_data = requests.get(f"{BACKEND_API_URL}/health", timeout=15).json()
-        st.metric(label="Cluster Health", value=health_data["status"])
-        st.caption(f"**Active Replica ID:** `{health_data.get('compute_node_id', 'Render-Node')}`")
+    # Strip trailing slashes to prevent //health 404 errors
+        clean_url = BACKEND_API_URL.rstrip('/')
+        response = requests.get(f"{clean_url}/health", timeout=15)
+    
+        if response.status_code == 200:
+            health_data = response.json()
+            st.metric(label="Cluster Health", value=health_data.get("status", "Unknown"))
+            st.caption(f"**Active Replica ID:** `{health_data.get('compute_node_id', 'Render-Node')}`")
+        else:
+            st.error(f"Backend Error {response.status_code}: {response.text}")
     except Exception as e:
-    # This will now display the exact error preventing the connection
-        st.error(f"Compute Nodes Unreachable: {str(e)}")
+        st.error(f"Connection Failed: {str(e)}")
+        
     st.divider()
     st.markdown("#### ⚡ In-Memory Cache")
     st.caption("**Technology:** Redis Container (Active)")
