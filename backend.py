@@ -19,7 +19,7 @@ except Exception:
     REDIS_AVAILABLE = False
 # Initialize Groq LLM orchestrator
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
+    model="openai/gpt-oss-20b",
     groq_api_key=os.getenv("GROQ_API_KEY"),
     temperature=0.7
 )
