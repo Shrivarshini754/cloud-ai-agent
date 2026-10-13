@@ -5,6 +5,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import redis
 from google import genai
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.prompts import PromptTemplate
 
 app = FastAPI()
 
@@ -33,6 +35,28 @@ def health_check():
         "compute_node_id": socket.gethostname(),
         "timestamp": time.time()
     }
+# Initialize the LangChain orchestrator
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash-8b",
+    google_api_key=os.getenv("GOOGLE_API_KEY"),
+    temperature=0.7
+)
+
+# Define the template
+template = """
+You are an expert A1-level Spanish tutor. 
+Help the student learn Spanish by providing clear, encouraging, and accurate answers.
+
+Student: {student_input}
+Tutor:
+"""
+prompt_template = PromptTemplate(
+    input_variables=["student_input"], 
+    template=template
+)
+
+# Link them together into a chain
+chain = prompt_template | llm
 
 @app.post("/chat")
 def process_chat(request: ChatRequest):
@@ -53,7 +77,8 @@ def process_chat(request: ChatRequest):
             model=request.model,
             contents=request.prompt,
         )
-        ai_response = response.text
+        ai_response = chain.invoke({"student_input": request.prompt})
+        final_text = ai_response.content
     except Exception as e:
         error_str = str(e)
         if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
@@ -63,9 +88,9 @@ def process_chat(request: ChatRequest):
     
     # 3. Store in Cache
     try:
-        redis_client.set(request.prompt, ai_response, ex=3600)
+        redis_client.set(request.prompt, final_text, ex=3600)
     except Exception:
         pass
     
     latency = time.time() - start_time
-    return {"response": ai_response, "cache_status": "miss", "latency": latency}
+    return {"response": final_text, "cache_status": "miss", "latency": latency}
