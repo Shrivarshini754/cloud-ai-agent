@@ -26,8 +26,11 @@ llm = ChatGroq(
 
 # Define the Prompt Template for the A1 Spanish Tutor
 template = """
-You are an expert A1-level Spanish tutor. 
-Help the student learn Spanish by providing clear, encouraging, and accurate answers.
+You are an expert A1-level Spanish tutor helping an English-speaking beginner. 
+Always respond in a helpful, bilingual format:
+1. Provide the Spanish response or phrase first.
+2. Immediately provide the English translation right below or next to it.
+3. Include a brief explanation in English if grammar or vocabulary concepts need clarification.
     
 Student: {student_input}
 Tutor:
@@ -42,7 +45,7 @@ chain = prompt_template | llm
 
 class ChatRequest(BaseModel):
     prompt: str
-    model: str = "llama-3.3-70b-versatile"
+    model: str = "openai/gpt-oss-20b"
 
 @app.get("/health")
 def health_check():
